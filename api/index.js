@@ -10,10 +10,9 @@ app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json())
 
 app.post('/api/trackpixel/track', (req, res) => {
-  const tid = req.body.tid
-  const amt = req.body.amt
-  const email = req.body.email
-  const offer = req.body.offer
+  const tid = req.query.tid
+  const email = req.query.email
+  const offer = req.query.offer
 
   const contactOptions = {
     method: 'GET',
@@ -31,7 +30,6 @@ app.post('/api/trackpixel/track', (req, res) => {
 
     // Replace these with actual tag ID fetch calls
     const tagIdConversion = 1306 // Fetch this from API
-    const tagIdAmt = 1307 // Fetch this from API
     const tagIdOffer = 1308 // Fetch this from API
 
     const tagOptions = {
@@ -52,30 +50,18 @@ app.post('/api/trackpixel/track', (req, res) => {
     // Add the conversion tag
     request(tagOptions, function (error, response, body) {
       if (error) throw new Error(error)
-
+      console.log(body) // Add this line
       tagOptions.body = JSON.stringify({
         contactTag: {
           contact: contactId,
-          tag: tagIdAmt,
+          tag: tagIdOffer,
         },
       })
 
-      // Add the amt tag
+      // Add the offer tag
       request(tagOptions, function (error, response, body) {
         if (error) throw new Error(error)
-        console.log(body) // Add this line
-        tagOptions.body = JSON.stringify({
-          contactTag: {
-            contact: contactId,
-            tag: tagIdOffer,
-          },
-        })
-
-        // Add the offer tag
-        request(tagOptions, function (error, response, body) {
-          if (error) throw new Error(error)
-          res.status(200).send('Pixel tracking and tagging successful')
-        })
+        res.status(200).send('Pixel tracking and tagging successful')
       })
     })
   })
