@@ -9,7 +9,7 @@ const port = process.env.PORT || 3000
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json())
 
-app.get('/trackpixel/track', (req, res) => {
+app.get('/api/trackpixel/track', (req, res) => {
   const tid = req.query.tid
   const amt = req.query.amt
   const email = req.query.email
