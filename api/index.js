@@ -1,19 +1,15 @@
 require('dotenv').config()
 const express = require('express')
-const bodyParser = require('body-parser')
 const request = require('request')
 
 const app = express()
 const port = process.env.PORT || 3000
 
-app.use(bodyParser.urlencoded({ extended: false }))
-app.use(bodyParser.json())
-
 app.get('/', (req, res) => {
   res.send('Hello, world!')
 })
 
-app.post('/api/trackpixel/track', (req, res) => {
+app.get('/api/trackpixel/track', (req, res) => {
   const tid = req.query.tid
   const email = req.query.email
   const offer = req.query.offer
@@ -54,7 +50,7 @@ app.post('/api/trackpixel/track', (req, res) => {
     // Add the conversion tag
     request(tagOptions, function (error, response, body) {
       if (error) throw new Error(error)
-      console.log(body) // Add this line
+      console.log(body)
       tagOptions.body = JSON.stringify({
         contactTag: {
           contact: contactId,
