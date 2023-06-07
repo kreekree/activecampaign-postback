@@ -9,11 +9,11 @@ const port = process.env.PORT || 3000
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json())
 
-app.get('/api/trackpixel/track', (req, res) => {
-  const tid = req.query.tid
-  const amt = req.query.amt
-  const email = req.query.email
-  const offer = req.query.offer
+app.post('/api/trackpixel/track', (req, res) => {
+  const tid = req.body.tid
+  const amt = req.body.amt
+  const email = req.body.email
+  const offer = req.body.offer
 
   const contactOptions = {
     method: 'GET',
