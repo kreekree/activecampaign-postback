@@ -10,9 +10,8 @@ app.get('/', (req, res) => {
 })
 
 app.get('/api/trackpixel/track', (req, res) => {
-  const tid = req.query.tid
   const email = req.query.email
-  const offer = req.query.offer
+  const offerTagId = req.query.offer
 
   const contactOptions = {
     method: 'GET',
@@ -28,10 +27,6 @@ app.get('/api/trackpixel/track', (req, res) => {
 
     const contactId = JSON.parse(body).contacts[0].id
 
-    // Replace these with actual tag ID fetch calls
-    const tagIdConversion = 1306 // Fetch this from API
-    const tagIdOffer = 1308 // Fetch this from API
-
     const tagOptions = {
       method: 'POST',
       url: 'https://tasteoftheoldcountry.api-us1.com/api/3/contactTags',
@@ -42,27 +37,15 @@ app.get('/api/trackpixel/track', (req, res) => {
       body: JSON.stringify({
         contactTag: {
           contact: contactId,
-          tag: tagIdConversion,
+          tag: offerTagId,
         },
       }),
     }
 
-    // Add the conversion tag
+    // Add the offer tag
     request(tagOptions, function (error, response, body) {
       if (error) throw new Error(error)
-      console.log(body)
-      tagOptions.body = JSON.stringify({
-        contactTag: {
-          contact: contactId,
-          tag: tagIdOffer,
-        },
-      })
-
-      // Add the offer tag
-      request(tagOptions, function (error, response, body) {
-        if (error) throw new Error(error)
-        res.status(200).send('Pixel tracking and tagging successful')
-      })
+      res.status(200).send('Pixel tracking and tagging successful')
     })
   })
 })
