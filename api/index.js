@@ -27,7 +27,22 @@ app.get('/api/trackpixel/track', (req, res) => {
 
     const contactId = JSON.parse(body).contacts[0].id
 
-    const tagOptions = {
+    const tagOptionsConversion = {
+      method: 'POST',
+      url: 'https://tasteoftheoldcountry.api-us1.com/api/3/contactTags',
+      headers: {
+        'Api-Token': process.env.ACTIVE_CAMPAIGN_API_KEY,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        contactTag: {
+          contact: contactId,
+          tag: 1306,
+        },
+      }),
+    }
+
+    const tagOptionsOffer = {
       method: 'POST',
       url: 'https://tasteoftheoldcountry.api-us1.com/api/3/contactTags',
       headers: {
@@ -42,10 +57,15 @@ app.get('/api/trackpixel/track', (req, res) => {
       }),
     }
 
-    // Add the offer tag
-    request(tagOptions, function (error, response, body) {
+    // Add the conversion tag
+    request(tagOptionsConversion, function (error, response, body) {
       if (error) throw new Error(error)
-      res.status(200).send('Pixel tracking and tagging successful')
+
+      // Add the offer tag
+      request(tagOptionsOffer, function (error, response, body) {
+        if (error) throw new Error(error)
+        res.status(200).send('Pixel tracking and tagging successful')
+      })
     })
   })
 })
